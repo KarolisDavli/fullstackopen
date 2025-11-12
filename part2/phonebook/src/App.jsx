@@ -74,7 +74,7 @@ const App = () => {
 
   const handleCreate = (personObj) => {
     personsService.create(personObj).then((response) => {
-      setPersons(persons.concat(response));
+      setPersons(response);
       handleNotification(`Added ${personObj.name}`, "success");
       resetFields();
     });
