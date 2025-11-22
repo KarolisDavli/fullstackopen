@@ -58,26 +58,34 @@ const App = () => {
       .then((response) => {
         setPersons(
           persons.map((person) =>
-            person.name !== dublicate.name ? person : response
+            person.id !== dublicate.id ? person : response
           )
         );
         resetFields();
       })
-      .catch(() => {
-        handleNotification(
-          `Information of ${dublicate.name} has already been removed from the server`,
-          "error"
-        );
-        resetFields();
+      .catch((error) => {
+        if (error) {
+          handleNotification(error.response.data.error, "error");
+        } else {
+          handleNotification(
+            `Information of ${dublicate.name} has already been removed from the server`,
+            "error"
+          );
+        }
       });
   };
 
   const handleCreate = (personObj) => {
-    personsService.create(personObj).then((response) => {
-      setPersons(response);
-      handleNotification(`Added ${personObj.name}`, "success");
-      resetFields();
-    });
+    personsService
+      .create(personObj)
+      .then((response) => {
+        setPersons(response);
+        handleNotification(`Added ${personObj.name}`, "success");
+        resetFields();
+      })
+      .catch((error) => {
+        handleNotification(error.response.data.error, "error");
+      });
   };
 
   const handleNotification = (msg, type) => {
